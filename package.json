@@ -1,0 +1,22 @@
+{
+  "name": "search-cli",
+  "version": "1.0.0",
+  "description": "script responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
+  "main": "index.js",
+  "keywords": [
+    "search",
+    "busca",
+    "pesquisa",
+    "node"
+  ],
+  "author": "Donato Cardoso Avila",
+  "license": "MIT",
+  "scripts": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
+  }
+}
