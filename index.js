@@ -19,4 +19,4 @@ program
     console.log(workdir, text);
   });
 
-program.parse(process.argv);
+program.parse(process.argv, program.opts());

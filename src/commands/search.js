@@ -3,8 +3,14 @@ const path = require('path');
 
 module.exports = {
   arguments: '[workdir] [text]',
-  description: 'Busca arquivos no diretorio desejado que possuem o texto informado',
-  action: (workdir, text) => {
+  description: [
+    'Busca arquivos no diretorio desejado que possuem o texto informado',
+    {
+      workdir: 'diretório em que a busca será realizada',
+      text: 'texto de busca nos arquivos',
+    },
+  ],
+  action: (workdir, text, options) => {
     const startTime = new Date().getTime();
 
     if (!workdir)
@@ -21,17 +27,17 @@ module.exports = {
     const texts = text.split(' ');
     const files = fs.readdirSync(scanDir);
 
-    const regex = `${texts.map((word) => `(\\b${word}\\b)`).join('|')}`;
+    const regex = options.exact ? `(\\b${text}\\b)` : `${texts.map((word) => `(\\b${word}\\b)`).join('|')}`;
 
     files.forEach(async (file) => {
       var fileContent = fs.readFileSync(`${scanDir}/${file}`, {
         encoding: 'utf8',
       });
 
-      var totalMatchs = fileContent.match(new RegExp(regex, 'g'));
+      var totalMatchs = fileContent.match(new RegExp(regex, options.caseSensitive ? 'g' : 'ig'));
       var uniqueMatchs = Array.from(new Set(totalMatchs));
 
-      if (uniqueMatchs && uniqueMatchs.length === texts.length) {
+      if (uniqueMatchs && ((options.exact && uniqueMatchs.length) || (texts && uniqueMatchs.length === texts.length))) {
         matchFiles.push({
           matchs: totalMatchs.length,
           file: `${scanDir}/${file}`,
@@ -45,7 +51,7 @@ module.exports = {
       '',
       'Arquivos encontrados:',
       '',
-      matchFiles,
+      //matchFiles,
       '',
       `Total de arquivos encontrados..: ${matchFiles.length}`,
       `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
