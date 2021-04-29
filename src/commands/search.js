@@ -1,6 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
+let startTime = new Date().getTime(),
+  scanDir = '',
+  texts = [],
+  files = [],
+  regex = null;
+
 module.exports = {
   arguments: '[workdir] [text]',
   description: [
@@ -11,53 +17,97 @@ module.exports = {
     },
   ],
   action: (workdir, text, options) => {
-    const startTime = new Date().getTime();
-
     if (!workdir)
       return show('É necessário informar os parâmetros <workdir> e <text>', '', 'Exemplo: search-cli <workdir> <text>');
 
     if (!text) return show('É necessário informar o parâmetro <text>', '', `Exemplo: search-cli ${workdir} <text>`);
 
-    const scanDir = path.resolve(process.cwd(), workdir);
+    scanDir = path.resolve(process.cwd(), workdir);
 
     if (!fs.existsSync(scanDir))
       return show('Erro ao encontrar o diretório:', '', scanDir, '', 'Informe um diretório existente...');
 
-    const matchFiles = [];
-    const texts = text.split(' ');
-    const files = fs.readdirSync(scanDir);
+    texts = text.split(' ');
+    files = fs.readdirSync(scanDir);
 
-    const regex = options.exact ? `(\\b${text}\\b)` : `${texts.map((word) => `(\\b${word}\\b)`).join('|')}`;
+    const caseSensitive = options.caseSensitive ? 'g' : 'ig';
+    const pattern = options.exact ? `(\\b${text}\\b)` : `${texts.map((word) => `(\\b${word}\\b)`).join('|')}`;
+    regex = new RegExp(pattern, caseSensitive);
 
-    files.forEach(async (file) => {
-      var fileContent = fs.readFileSync(`${scanDir}/${file}`, {
-        encoding: 'utf8',
-      });
-
-      var totalMatchs = fileContent.match(new RegExp(regex, options.caseSensitive ? 'g' : 'ig'));
-      var uniqueMatchs = Array.from(new Set(totalMatchs));
-
-      if (uniqueMatchs && ((options.exact && uniqueMatchs.length) || (texts && uniqueMatchs.length === texts.length))) {
-        matchFiles.push({
-          matchs: totalMatchs.length,
-          file: `${scanDir}/${file}`,
-        });
-      }
-    });
-
-    return show(
-      `Parametros...: ${workdir} "${text}"`,
-      `Diretório....: ${scanDir}`,
-      '',
-      'Arquivos encontrados:',
-      '',
-      //matchFiles,
-      '',
-      `Total de arquivos encontrados..: ${matchFiles.length}`,
-      `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
-    );
+    options.withDetails ? detailsSearch(workdir, text, options) : simpleSearch(workdir, text, options);
   },
 };
+
+function simpleSearch(workdir, text, options) {
+  const matchFiles = [];
+
+  files.forEach((file) => {
+    let content = fs.readFileSync(`${scanDir}/${file}`, {
+      encoding: 'utf8',
+    });
+
+    let totalMatchs = content.match(regex);
+    let uniqueMatchs = Array.from(new Set(totalMatchs));
+
+    if (uniqueMatchs && ((options.exact && uniqueMatchs.length) || (texts && uniqueMatchs.length === texts.length))) {
+      matchFiles.push(`${scanDir}/${file}`);
+    }
+  });
+
+  return show(
+    `Foram encontradas ${matchFiles.length} ocorrências pelo termo "${text}"`,
+    `Os arquivos que possuem "${text}" são:`,
+    '',
+    ...matchFiles,
+    '',
+    `Total de arquivos encontrados..: ${matchFiles.length}`,
+    `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
+  );
+}
+
+function detailsSearch(workdir, text, options) {
+  const matchFiles = [];
+  const showOptions = [`Opções..........: ${Object.getOwnPropertyNames(options)}`, ''];
+
+  files.forEach(async (file) => {
+    const fileName = `${scanDir}/${file}`;
+
+    let content = fs.readFileSync(fileName, {
+      encoding: 'utf8',
+    });
+
+    let stats = fs.statSync(fileName);
+
+    let totalMatchs = content.match(regex);
+    let uniqueMatchs = Array.from(new Set(totalMatchs));
+
+    if (uniqueMatchs && ((options.exact && uniqueMatchs.length) || (texts && uniqueMatchs.length === texts.length))) {
+      matchFiles.push({
+        matchs: totalMatchs.length,
+        quantidadePalavras: content.split(' ').filter((word) => !!word).length,
+        quantidadeElementos: content.length,
+        tamanhoArquivo: `${stats.size} bytes`,
+        caminhoArquivo: fileName,
+      });
+    }
+  });
+
+  const findFiles = matchFiles.length
+    ? ['Arquivos encontrados:', '', matchFiles, '', `Total de arquivos encontrados..: ${matchFiles.length}`]
+    : ['Nenhum arquivo encontrado!', ''];
+
+  return show(
+    'Parâmetros......:',
+    `     |_ workdir.: ${workdir}`,
+    `     |_ text....: "${text}"`,
+    '',
+    `Diretório.......: ${scanDir}`,
+    '',
+    ...showOptions,
+    ...findFiles,
+    `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
+  );
+}
 
 function show(...messages) {
   messages.forEach((message) => console.log(message));
