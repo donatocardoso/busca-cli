@@ -25,10 +25,11 @@ module.exports = () => {
     .addOption(new Option('-r,   --recursivo', 'Busca na pasta e sub-pastas do caminho informado'))
     .addOption(new Option('-s,   --sensivel', 'Diferencia maiúscula de minúscula'))
     .helpOption('-a,   --ajuda', 'Exibi ajuda para usar o comando')
-    .addHelpText('afterAll', '\nExemplos de chamada:')
-    .addHelpText('afterAll', '   $ busca-cli pasta ./exemplo "walt disney"')
-    .addHelpText('afterAll', '   $ busca-cli pasta -eds ./exemplo "walt disney"')
-    .addHelpText('afterAll', '   $ busca-cli pasta -e -d -s ./exemplo "walt disney"')
+    .addHelpText('afterAll', '\nExemplos de chamada:\n')
+    .addHelpText('afterAll', '')
+    .addHelpText('afterAll', '$ busca-cli pasta ./exemplo "walt disney"')
+    .addHelpText('afterAll', '$ busca-cli pasta -ders ./exemplo "walt disney"')
+    .addHelpText('afterAll', '$ busca-cli pasta -d -e -r -s ./exemplo "walt disney"')
     .action((caminho, texto, options) => {
       if (!caminho) {
         return message(
@@ -51,6 +52,18 @@ module.exports = () => {
           diretorio,
           '',
           'Por favor informe um diretório existente...'
+        );
+      }
+
+      if (!fs.statSync(diretorio).isDirectory()) {
+        return message(
+          'O caminho informado não é de um diretório:',
+          '',
+          caminho,
+          '',
+          'Por favor tente usar o comando:',
+          '',
+          `$ busca-cli arquivo ${caminho}`
         );
       }
 
@@ -127,8 +140,6 @@ function busca(caminho, texto, opcoes) {
 
       return;
     }
-
-    // if (!fs.statSync(caminhoArquivo).isFile())
 
     let conteudo = fs.readFileSync(caminhoArquivo, {
       encoding: 'utf8',
