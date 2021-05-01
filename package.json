@@ -1,9 +1,10 @@
 {
   "name": "search-cli",
-  "version": "0.4.2",
+  "version": "0.5.2",
   "description": "script responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
   "main": "index.js",
   "bin": {
+    "busca-cli": "index.js",
     "search-cli": "index.js"
   },
   "keywords": [
