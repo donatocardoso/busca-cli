@@ -1,6 +1,6 @@
+const { Command, Option } = require('commander');
 const fs = require('fs');
 const path = require('path');
-const { Command, Option } = require('commander');
 const { message } = require('../../utils/message');
 
 let startTime = new Date().getTime(),
@@ -15,7 +15,7 @@ let startTime = new Date().getTime(),
  */
 module.exports = () => {
   return new Command('pasta')
-    .arguments('<caminho> <texto>')
+    .arguments('     <caminho> <texto>')
     .description('Busca arquivos no diretório desejado que possuem o texto informado', {
       caminho: 'Diretório em que a busca será realizada',
       texto: 'Texto de busca nos arquivos',
@@ -49,7 +49,7 @@ module.exports = () => {
         return message(
           'Erro ao encontrar o diretório:',
           '',
-          diretorio,
+          caminho,
           '',
           'Por favor informe um diretório existente...'
         );
@@ -57,13 +57,13 @@ module.exports = () => {
 
       if (!fs.statSync(diretorio).isDirectory()) {
         return message(
-          'O caminho informado não é de um diretório:',
+          'O caminho informado não é de um diretório!',
           '',
           caminho,
           '',
           'Por favor tente usar o comando:',
           '',
-          `$ busca-cli arquivo ${caminho}`
+          `$ busca-cli arquivo ${caminho} "${texto}"`
         );
       }
 
@@ -79,9 +79,9 @@ module.exports = () => {
 };
 
 function buscaSimples(caminho, texto, opcoes) {
-  const arquivosEncontrados = busca(caminho, texto, opcoes).map((arquivo) => arquivo.caminhoArquivo);
+  const arquivosEncontrados = busca(caminho, opcoes).map((arquivo) => arquivo.caminhoArquivo);
 
-  const mostraArquivos = arquivosEncontrados.length ? arquivosEncontrados : ['Nenhum arquivo encontrado!', ''];
+  const mostraArquivos = arquivosEncontrados.length ? arquivosEncontrados : ['Nenhum arquivo encontrado!'];
 
   return message(
     `Foram encontradas ${arquivosEncontrados.length} ocorrências pelo termo "${texto}"`,
@@ -94,7 +94,7 @@ function buscaSimples(caminho, texto, opcoes) {
 }
 
 function buscaDetalhada(caminho, texto, opcoes) {
-  const arquivosEncontrados = busca(caminho, texto, opcoes);
+  const arquivosEncontrados = busca(caminho, opcoes);
 
   const opcoesProps = Object.getOwnPropertyNames(opcoes);
   const mostraOpcoes = opcoesProps.length ? [`Opções..........: ${opcoesProps}`, ''] : [];
@@ -122,7 +122,7 @@ function buscaDetalhada(caminho, texto, opcoes) {
   );
 }
 
-function busca(caminho, texto, opcoes) {
+function busca(caminho, opcoes) {
   const arquivosEncontrados = [];
 
   if (!fs.existsSync(caminho)) {
@@ -134,7 +134,7 @@ function busca(caminho, texto, opcoes) {
 
     if (fs.statSync(caminhoArquivo).isDirectory()) {
       if (opcoes.recursivo) {
-        arquivosEncontrados.push(...busca(caminhoArquivo, texto, opcoes));
+        arquivosEncontrados.push(...busca(caminhoArquivo, opcoes));
         return;
       }
 

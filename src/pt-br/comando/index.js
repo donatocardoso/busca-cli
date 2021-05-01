@@ -1,3 +1,4 @@
+const arquivo = require('./arquivo');
 const pasta = require('./pasta');
 
-module.exports = [pasta];
+module.exports = [arquivo, pasta];
