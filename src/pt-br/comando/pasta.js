@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const { Command, Option } = require('commander');
+const { message } = require('../../utils/message');
 
 let startTime = new Date().getTime(),
-  scanDir = '',
+  diretorio = '',
   textos = [],
-  files = [],
   regex = null;
 
 /**
@@ -15,112 +15,143 @@ let startTime = new Date().getTime(),
  */
 module.exports = () => {
   return new Command('pasta')
-    .arguments('<pasta> <texto>')
+    .arguments('<caminho> <texto>')
     .description('Busca arquivos no diretório desejado que possuem o texto informado', {
-      pasta: 'Diretório em que a busca será realizada',
+      caminho: 'Diretório em que a busca será realizada',
       texto: 'Texto de busca nos arquivos',
     })
     .addOption(new Option('-d,   --detalhes', 'Retorna detalhes dos arquivos encontrados'))
     .addOption(new Option('-e,   --exato', 'Busca pela sentença exata informada'))
+    .addOption(new Option('-r,   --recursivo', 'Busca na pasta e sub-pastas do caminho informado'))
     .addOption(new Option('-s,   --sensivel', 'Diferencia maiúscula de minúscula'))
     .helpOption('-a,   --ajuda', 'Exibi ajuda para usar o comando')
     .addHelpText('afterAll', '\nExemplos de chamada:')
     .addHelpText('afterAll', '   $ busca-cli pasta ./exemplo "walt disney"')
     .addHelpText('afterAll', '   $ busca-cli pasta -eds ./exemplo "walt disney"')
     .addHelpText('afterAll', '   $ busca-cli pasta -e -d -s ./exemplo "walt disney"')
-    .action((pasta, texto, options) => {
-      if (!pasta)
-        return show('É necessário informar os parâmetros <pasta> e <texto>', '', 'Exemplo: search-cli <pasta> <texto>');
+    .action((caminho, texto, options) => {
+      if (!caminho) {
+        return message(
+          'É necessário informar os parâmetros <caminho> e <texto>',
+          '',
+          'Exemplo: busca-cli pasta <caminho> <texto>'
+        );
+      }
 
-      if (!texto) return show('É necessário informar o parâmetro <texto>', '', `Exemplo: search-cli ${pasta} <texto>`);
+      if (!texto) {
+        return message('É necessário informar o parâmetro <texto>', '', `Exemplo: busca-cli pasta ${caminho} <texto>`);
+      }
 
-      scanDir = path.resolve(process.cwd(), pasta);
+      diretorio = path.resolve(process.cwd(), caminho);
 
-      if (!fs.existsSync(scanDir))
-        return show('Erro ao encontrar o diretório:', '', scanDir, '', 'Informe um diretório existente...');
+      if (!fs.existsSync(diretorio)) {
+        return message(
+          'Erro ao encontrar o diretório:',
+          '',
+          diretorio,
+          '',
+          'Por favor informe um diretório existente...'
+        );
+      }
 
       textos = texto.split(' ');
-      files = fs.readdirSync(scanDir);
 
-      const caseSensitive = options.caseSensitive ? 'g' : 'ig';
-      const pattern = options.exact ? `(\\b${texto}\\b)` : `${textos.map((word) => `(\\b${word}\\b)`).join('|')}`;
-      regex = new RegExp(pattern, caseSensitive);
+      const sensivel = options.sensivel ? 'g' : 'ig';
+      const pattern = options.exato ? `(\\b${texto}\\b)` : `${textos.map((word) => `(\\b${word}\\b)`).join('|')}`;
 
-      options.withDetails ? detailsSearch(pasta, texto, options) : simpleSearch(pasta, texto, options);
+      regex = new RegExp(pattern, sensivel);
+
+      options.detalhes ? buscaDetalhada(caminho, texto, options) : buscaSimples(caminho, texto, options);
     });
 };
 
-function simpleSearch(pasta, texto, options) {
-  const matchFiles = [];
+function buscaSimples(caminho, texto, opcoes) {
+  const arquivosEncontrados = busca(caminho, texto, opcoes).map((arquivo) => arquivo.caminhoArquivo);
 
-  files.forEach((file) => {
-    let content = fs.readFileSync(`${scanDir}/${file}`, {
-      encoding: 'utf8',
-    });
+  const mostraArquivos = arquivosEncontrados.length ? arquivosEncontrados : ['Nenhum arquivo encontrado!', ''];
 
-    let totalMatchs = content.match(regex);
-    let uniqueMatchs = Array.from(new Set(totalMatchs));
-
-    if (uniqueMatchs && ((options.exact && uniqueMatchs.length) || (textos && uniqueMatchs.length === textos.length))) {
-      matchFiles.push(`${scanDir}/${file}`);
-    }
-  });
-
-  return show(
-    `Foram encontradas ${matchFiles.length} ocorrências pelo termo "${texto}"`,
+  return message(
+    `Foram encontradas ${arquivosEncontrados.length} ocorrências pelo termo "${texto}"`,
     `Os arquivos que possuem "${texto}" são:`,
     '',
-    ...matchFiles,
+    ...mostraArquivos,
     '',
-    `Total de arquivos encontrados..: ${matchFiles.length}`,
     `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
   );
 }
 
-function detailsSearch(pasta, texto, options) {
-  const matchFiles = [];
-  const showOptions = [`Opções..........: ${Object.getOwnPropertyNames(options)}`, ''];
+function buscaDetalhada(caminho, texto, opcoes) {
+  const arquivosEncontrados = busca(caminho, texto, opcoes);
 
-  files.forEach(async (file) => {
-    const fileName = `${scanDir}/${file}`;
+  const opcoesProps = Object.getOwnPropertyNames(opcoes);
+  const mostraOpcoes = opcoesProps.length ? [`Opções..........: ${opcoesProps}`, ''] : [];
 
-    let content = fs.readFileSync(fileName, {
+  const mostraArquivos = arquivosEncontrados.length
+    ? [
+        'Arquivos encontrados:',
+        '',
+        arquivosEncontrados,
+        '',
+        `Total de arquivos encontrados..: ${arquivosEncontrados.length}`,
+      ]
+    : ['Nenhum arquivo encontrado!', ''];
+
+  return message(
+    'Parâmetros.......:',
+    `     |_ caminho..: ${caminho}`,
+    `     |_ texto....: "${texto}"`,
+    '',
+    `Diretório........: ${diretorio}`,
+    '',
+    ...mostraOpcoes,
+    ...mostraArquivos,
+    `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
+  );
+}
+
+function busca(caminho, texto, opcoes) {
+  const arquivosEncontrados = [];
+
+  if (!fs.existsSync(caminho)) {
+    return message('Erro ao encontrar o diretório:', '', caminho, '', 'Por favor informe um diretório existente...');
+  }
+
+  fs.readdirSync(caminho).forEach((arquivo) => {
+    const caminhoArquivo = `${caminho}/${arquivo}`;
+
+    if (fs.statSync(caminhoArquivo).isDirectory()) {
+      if (opcoes.recursivo) {
+        arquivosEncontrados.push(...busca(caminhoArquivo, texto, opcoes));
+        return;
+      }
+
+      return;
+    }
+
+    // if (!fs.statSync(caminhoArquivo).isFile())
+
+    let conteudo = fs.readFileSync(caminhoArquivo, {
       encoding: 'utf8',
     });
 
-    let stats = fs.statSync(fileName);
+    let propriedades = fs.statSync(caminhoArquivo);
 
-    let totalMatchs = content.match(regex);
-    let uniqueMatchs = Array.from(new Set(totalMatchs));
+    let encontros = conteudo.match(regex);
+    let encontrosUnicos = Array.from(new Set(encontros));
 
-    if (uniqueMatchs && ((options.exact && uniqueMatchs.length) || (textos && uniqueMatchs.length === textos.length))) {
-      matchFiles.push({
-        matchs: totalMatchs.length,
-        quantidadePalavras: content.split(' ').filter((word) => !!word).length,
-        quantidadeElementos: content.length,
-        tamanhoArquivo: `${stats.size} bytes`,
-        caminhoArquivo: fileName,
+    if (
+      encontrosUnicos &&
+      ((opcoes.exato && encontrosUnicos.length) || (textos && encontrosUnicos.length === textos.length))
+    ) {
+      arquivosEncontrados.push({
+        encontros: encontros.length,
+        quantidadePalavras: conteudo.split(' ').filter((word) => !!word).length,
+        quantidadeElementos: conteudo.length,
+        tamanhoArquivo: `${propriedades.size} bytes`,
+        caminhoArquivo: caminhoArquivo,
       });
     }
   });
 
-  const findFiles = matchFiles.length
-    ? ['Arquivos encontrados:', '', matchFiles, '', `Total de arquivos encontrados..: ${matchFiles.length}`]
-    : ['Nenhum arquivo encontrado!', ''];
-
-  return show(
-    'Parâmetros......:',
-    `     |_ pasta.: ${pasta}`,
-    `     |_ texto....: "${texto}"`,
-    '',
-    `Diretório.......: ${scanDir}`,
-    '',
-    ...showOptions,
-    ...findFiles,
-    `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
-  );
-}
-
-function show(...messages) {
-  messages.forEach((message) => console.log(message));
+  return arquivosEncontrados;
 }
