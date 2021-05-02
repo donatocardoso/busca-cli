@@ -1,5 +1,4 @@
 const { Command } = require('commander');
-const shell = require('shelljs');
 const packagejson = require('../../package.json');
 const comandos = require('./comando');
 
@@ -12,7 +11,5 @@ programa
   .version(packagejson.version, '-v,   --versao', 'Exibi a versão atual');
 
 for (const comando of comandos) programa.addCommand(comando());
-
-programa.exec = shell.exec;
 
 module.exports = programa;

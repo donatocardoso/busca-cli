@@ -1,7 +1,7 @@
 const { Command, Option } = require('commander');
 const fs = require('fs');
 const path = require('path');
-const { message } = require('../../utils/message');
+const { mostraMensagem } = require('../../utils/message');
 
 let startTime = new Date().getTime(),
   diretorio = '',
@@ -33,7 +33,7 @@ module.exports = () => {
     .addHelpText('afterAll', '$ busca-cli pasta -d -e -r -s ./exemplo "walt disney"')
     .action((caminho, texto, options) => {
       if (!caminho) {
-        return message(
+        return mostraMensagem(
           'É necessário informar os parâmetros <caminho> e <texto>',
           '',
           'Exemplo: busca-cli pasta <caminho> <texto>'
@@ -41,13 +41,17 @@ module.exports = () => {
       }
 
       if (!texto) {
-        return message('É necessário informar o parâmetro <texto>', '', `Exemplo: busca-cli pasta ${caminho} <texto>`);
+        return mostraMensagem(
+          'É necessário informar o parâmetro <texto>',
+          '',
+          `Exemplo: busca-cli pasta ${caminho} <texto>`
+        );
       }
 
       diretorio = path.resolve(process.cwd(), caminho);
 
       if (!fs.existsSync(diretorio)) {
-        return message(
+        return mostraMensagem(
           'Erro ao encontrar o diretório:',
           '',
           caminho,
@@ -57,7 +61,7 @@ module.exports = () => {
       }
 
       if (!fs.statSync(diretorio).isDirectory()) {
-        return message(
+        return mostraMensagem(
           'O caminho informado não é de um diretório!',
           '',
           caminho,
@@ -84,7 +88,7 @@ function buscaSimples(caminho, texto, opcoes) {
 
   const mostraArquivos = arquivosEncontrados.length ? arquivosEncontrados : ['Nenhum arquivo encontrado!'];
 
-  return message(
+  return mostraMensagem(
     `Foram encontradas ${arquivosEncontrados.length} ocorrências pelo termo "${texto}"`,
     `Os arquivos que possuem "${texto}" são:`,
     '',
@@ -110,7 +114,7 @@ function buscaDetalhada(caminho, texto, opcoes) {
       ]
     : ['Nenhum arquivo encontrado!', ''];
 
-  return message(
+  return mostraMensagem(
     'Parâmetros.......:',
     `     |_ caminho..: ${caminho}`,
     `     |_ texto....: "${texto}"`,
@@ -127,7 +131,13 @@ function busca(caminho, opcoes) {
   const arquivosEncontrados = [];
 
   if (!fs.existsSync(caminho)) {
-    return message('Erro ao encontrar o diretório:', '', caminho, '', 'Por favor informe um diretório existente...');
+    return mostraMensagem(
+      'Erro ao encontrar o diretório:',
+      '',
+      caminho,
+      '',
+      'Por favor informe um diretório existente...'
+    );
   }
 
   fs.readdirSync(caminho).forEach((arquivo) => {

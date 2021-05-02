@@ -1,7 +1,7 @@
-const { Command, Option } = require('commander');
-const fs = require('fs');
-const path = require('path');
-const { message } = require('../../utils/message');
+let { Command, Option } = require('commander');
+let fs = require('fs');
+let path = require('path');
+let { mostraMensagem } = require('../../utils/message');
 
 let startTime = new Date().getTime(),
   textos = [],
@@ -14,8 +14,8 @@ let startTime = new Date().getTime(),
  */
 module.exports = () => {
   return new Command('arquivo')
-    .usage('[opcoes] -c [caminhos...]')
-    .arguments('   <texto>')
+    .usage('[opcoes] <texto> -c [caminhos...]')
+    .arguments('<texto>')
     .description('Verifica se o(s) arquivo(s) possue(em) o texto informado', {
       texto: 'Texto de busca no arquivo',
     })
@@ -31,7 +31,7 @@ module.exports = () => {
     .addHelpText('afterAll', '$ busca-cli arquivo -d -e -s "walt disney" -c ./arquivo01.txt ./arquivo02.txt')
     .action((texto, options) => {
       if (!texto) {
-        return message(
+        return mostraMensagem(
           'É necessário informar o parâmetro <texto>',
           '',
           `Exemplo: busca-cli arquivo <texto> --caminhos [...]`
@@ -39,7 +39,7 @@ module.exports = () => {
       }
 
       if (!options.caminhos.length) {
-        return message(
+        return mostraMensagem(
           'É necessário informar a opção --caminhos',
           '',
           `Exemplo: busca-cli arquivo "${texto}" --caminhos [...]`
@@ -48,8 +48,8 @@ module.exports = () => {
 
       textos = texto.split(' ');
 
-      const sensivel = options.sensivel ? 'g' : 'ig';
-      const pattern = options.exato ? `(\\b${texto}\\b)` : `${textos.map((word) => `(\\b${word}\\b)`).join('|')}`;
+      let sensivel = options.sensivel ? 'g' : 'ig';
+      let pattern = options.exato ? `(\\b${texto}\\b)` : `${textos.map((word) => `(\\b${word}\\b)`).join('|')}`;
 
       regex = new RegExp(pattern, sensivel);
 
@@ -58,22 +58,17 @@ module.exports = () => {
 };
 
 function buscaSimples(texto, opcoes) {
-  const arquivos = busca(opcoes);
+  let arquivos = busca(opcoes);
 
-  const encontrados = arquivos.encontrados.length
-    ? [
-        `Os arquivos que possuem "${texto}" são:`,
-        '',
-        ...arquivos.encontrados.map((arquivo) => arquivo.caminhoArquivo),
-        '',
-      ]
+  let encontrados = arquivos.encontrados.length
+    ? [`Os arquivos que possuem "${texto}" são:`, '', ...arquivos.encontrados.map((arquivo) => arquivo.caminho), '']
     : ['', 'Nenhum arquivo com o texto informado foi encontrado!', ''];
 
-  const naoEncontrados = arquivos.naoEncontrados.length
+  let naoEncontrados = arquivos.naoEncontrados.length
     ? ['', `Os arquivos a seguir não foram encontrados: `, '', ...arquivos.naoEncontrados, '']
     : [];
 
-  return message(
+  return mostraMensagem(
     `Foram encontradas ${arquivos.encontrados.length} ocorrências pelo termo "${texto}"`,
     ...naoEncontrados,
     ...encontrados,
@@ -82,12 +77,12 @@ function buscaSimples(texto, opcoes) {
 }
 
 function buscaDetalhada(texto, opcoes) {
-  const arquivos = busca(opcoes);
+  let arquivos = busca(opcoes);
 
-  const opcoesProps = Object.getOwnPropertyNames(opcoes);
-  const mostraOpcoes = opcoesProps.length ? [`Opções..........: ${opcoesProps}`, ''] : [];
+  let opcoesProps = Object.getOwnPropertyNames(opcoes);
+  let mostraOpcoes = opcoesProps.length ? [`Opções..........: ${opcoesProps}`, ''] : [];
 
-  const encontrados = arquivos.encontrados.length
+  let encontrados = arquivos.encontrados.length
     ? [
         'Arquivos encontrados:',
         '',
@@ -97,11 +92,11 @@ function buscaDetalhada(texto, opcoes) {
       ]
     : ['Nenhum arquivo encontrado!', ''];
 
-  const naoEncontrados = arquivos.naoEncontrados.length
+  let naoEncontrados = arquivos.naoEncontrados.length
     ? [`Os arquivos a seguir não foram encontrados: `, '', ...arquivos.naoEncontrados, '']
     : [];
 
-  return message(
+  return mostraMensagem(
     'Parâmetro.......:',
     `     |_ texto....: "${texto}"`,
     '',
@@ -113,25 +108,25 @@ function buscaDetalhada(texto, opcoes) {
 }
 
 function busca(opcoes) {
-  const encontrados = [];
-  const naoEncontrados = [];
+  let encontrados = [];
+  let naoEncontrados = [];
 
   opcoes.caminhos.forEach((caminho) => {
-    const caminhoCompleto = path.resolve(process.cwd(), caminho);
+    let caminhoCompleto = path.resolve(process.cwd(), caminho);
 
     if (!fs.existsSync(caminhoCompleto)) {
       naoEncontrados.push(caminhoCompleto);
       return;
     }
 
-    const conteudo = fs.readFileSync(caminhoCompleto, {
+    let conteudo = fs.readFileSync(caminhoCompleto, {
       encoding: 'utf8',
     });
 
-    const propriedades = fs.statSync(caminhoCompleto);
+    let propriedades = fs.statSync(caminhoCompleto);
 
-    const encontros = conteudo.match(regex);
-    const encontrosUnicos = Array.from(new Set(encontros));
+    let encontros = conteudo.match(regex);
+    let encontrosUnicos = Array.from(new Set(encontros));
 
     if (
       encontrosUnicos &&
@@ -139,10 +134,10 @@ function busca(opcoes) {
     ) {
       encontrados.push({
         encontros: encontros.length,
-        quantidadePalavras: conteudo.split(' ').filter((word) => !!word).length,
-        quantidadeElementos: conteudo.length,
-        tamanhoArquivo: `${propriedades.size} bytes`,
-        caminhoArquivo: caminhoCompleto,
+        palavras: conteudo.split(' ').filter((word) => !!word).length,
+        elementos: conteudo.length,
+        tamanho: `${propriedades.size} bytes`,
+        caminho: caminho,
       });
     }
   });

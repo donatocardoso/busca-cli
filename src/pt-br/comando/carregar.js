@@ -4,7 +4,7 @@ const path = require('path');
 const readline = require('readline');
 const { mostraMensagem } = require('../../utils/message');
 
-const interface = readline.createInterface({
+const input = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   terminal: false,
@@ -108,7 +108,7 @@ function carregar(options) {
     `Foram carregados.................: ${carregados.length} arquivos!`
   );
 
-  interface.question('\nInforme o texto que deseja buscar: ', (texto) => {
+  input.question('\nInforme o texto que deseja buscar: ', (texto) => {
     const tempoFiltrar = new Date().getTime();
 
     const palavras = texto.split(' ');
@@ -153,6 +153,6 @@ function carregar(options) {
 
     mostraMensagem(...mensagem);
 
-    interface.close();
+    input.close();
   });
 }

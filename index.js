@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-const program = require('./src/pt-br/principal');
+const programa = require('./src/pt-br/principal');
 
-program.parse(process.argv, program.opts());
+programa.parse(process.argv, programa.opts());
