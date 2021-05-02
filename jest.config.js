@@ -3,7 +3,6 @@
 
 module.exports = {
   clearMocks: true,
-  collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
   coverageThreshold: {
     global: {
@@ -16,6 +15,7 @@ module.exports = {
   coverageDirectory: './coverage-temp',
   coverageProvider: 'babel',
   coverageReporters: ['json-summary', 'text', 'lcov'],
+  setupFiles: ['./jest.setup.js'],
   testMatch: ['**/__tests__/**/*.test.js'],
   testPathIgnorePatterns: ['\\\\node_modules\\\\'],
   testTimeout: 30000,
