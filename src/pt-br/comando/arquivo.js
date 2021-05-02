@@ -14,6 +14,7 @@ let startTime = new Date().getTime(),
  */
 module.exports = () => {
   return new Command('arquivo')
+    .usage('[opcoes] -c [caminhos...]')
     .arguments('   <texto>')
     .description('Verifica se o(s) arquivo(s) possue(em) o texto informado', {
       texto: 'Texto de busca no arquivo',

@@ -15,6 +15,7 @@ let startTime = new Date().getTime(),
  */
 module.exports = () => {
   return new Command('pasta')
+    .usage('[opcoes] <caminho> <texto>')
     .arguments('     <caminho> <texto>')
     .description('Busca arquivos no diretório desejado que possuem o texto informado', {
       caminho: 'Diretório em que a busca será realizada',
