@@ -1,17 +1,22 @@
 # ✅ busca-cli
 
-Escrito em [node](http://nodejs.org), é uma ferramenta muito simples para realizar buscas em pastas e arquivos a partir do terminal, utilizando padrão **E/AND** para filtrar os arquivos, independende da ordem das palavras ou se estão em sequencia, podendo personalizar os o filtro conforme opções disponiveis em cada comando. [Veja como usar cada comando!](#comandos)
+> Escrito em [node](http://nodejs.org), é uma ferramenta muito simples para realizar buscas em pastas e arquivos a partir do terminal, utilizando padrão **E/AND** para filtrar os arquivos, independende da ordem das palavras ou se estão em sequencia, podendo personalizar os o filtro conforme opções disponiveis em cada comando. [Veja como usar cada comando!](#comandos)
+
+<center>
 
 Uma pequena experiência de aprendizagem js e node (e apenas se divertindo).
 
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
 ![badge-statements]
 ![badge-branches]
 ![badge-functions]
 ![badge-lines]
 
----
+<br/>
+
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+
+</center>
 
 ## 🔹 Pré Requisitos
 

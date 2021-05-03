@@ -14,25 +14,6 @@ describe('busca-cli arquivo [opcoes] <texto> -c [caminhos...]', () => {
     if (arquivo.opts().sensivel) delete arquivo.opts().sensivel;
   });
 
-  it('deve retornar as intruções de uso do comando', () => {
-    expect(arquivo.helpInformation().split('\n')).toEqual([
-      'Usage: busca-cli arquivo [opcoes] <texto> -c [caminhos...]',
-      '',
-      'Verifica se o(s) arquivo(s) possue(em) o texto informado',
-      '',
-      'Arguments:',
-      '  texto                            Texto de busca no arquivo',
-      '',
-      'Options:',
-      '  -c,   --caminhos  [caminhos...]  Arquivo(s) em que a verificação será realizada',
-      '  -d,   --detalhes                 Retorna detalhes do(s) arquivo(s)',
-      '  -e,   --exato                    Busca pela sentença exata informada',
-      '  -s,   --sensivel                 Diferencia maiúscula de minúscula',
-      '  -a,   --ajuda                    Exibi ajuda para usar o comando',
-      '',
-    ]);
-  });
-
   it('deve retornar nenhum arquivo encontrado', () => {
     arquivo.parse([
       'node',

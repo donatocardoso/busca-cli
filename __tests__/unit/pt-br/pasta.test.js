@@ -15,26 +15,6 @@ describe('busca-cli pasta [opcoes] <texto> -c [caminhos...]', () => {
     if (pasta.opts().sensivel) delete pasta.opts().sensivel;
   });
 
-  it('deve retornar as intruções de uso do comando', () => {
-    expect(pasta.helpInformation().split('\n')).toEqual([
-      'Usage: busca-cli pasta [opcoes] <texto> -c [caminhos...]',
-      '',
-      'Busca arquivos no diretório desejado que possuem o texto informado',
-      '',
-      'Arguments:',
-      '  texto                            Texto de busca nos arquivos',
-      '',
-      'Options:',
-      '  -c,   --caminhos  [caminhos...]  Diretório(s) em que a verificação será realizada',
-      '  -d,   --detalhes                 Retorna detalhes dos arquivos encontrados',
-      '  -e,   --exato                    Busca pela sentença exata informada',
-      '  -r,   --recursivo                Busca na pasta e sub-pastas do caminho informado',
-      '  -s,   --sensivel                 Diferencia maiúscula de minúscula',
-      '  -a,   --ajuda                    Exibi ajuda para usar o comando',
-      '',
-    ]);
-  });
-
   it('deve retornar nenhum arquivo encontrado', () => {
     pasta.parse([
       'node',

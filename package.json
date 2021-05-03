@@ -1,7 +1,7 @@
 {
   "name": "@donatocardoso/busca-cli",
   "description": "Ferramenta responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
-  "homepage": "https://gitlab.com/donatocardoso/busca-cli/-/blob/master/README.md",
+  "homepage": "https://github.com/donatocardoso/busca-cli/-/blob/master/README.md",
   "keywords": [
     "search",
     "busca",
@@ -13,14 +13,17 @@
   },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
-  "version": "2.10.7",
+  "version": "2.10.8",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "https:////registry.npmjs.org"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/donatocardoso/busca-cli.git"
+    "url": "git+https://github.com/donatocardoso/busca-cli.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/donatocardoso/busca-cli/issues"
+    "url": "https://github.com/donatocardoso/busca-cli/issues"
   },
   "scripts": {
     "pretest": "rm -fr ./coverage-temp ./example/data && mkdir ./example/data && npm link",

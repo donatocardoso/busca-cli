@@ -15,23 +15,6 @@ describe('busca-cli carregar [opcoes] <texto> -c [caminhos...]', () => {
     if (carregar.opts().sensivel) delete carregar.opts().sensivel;
   });
 
-  it('deve retornar as intruções de uso do comando', () => {
-    expect(carregar.helpInformation().split('\n')).toEqual([
-      'Usage: busca-cli carregar [opcoes] -c [caminhos...]',
-      '',
-      'Carrega em memória os arquivos do diretório informado',
-      '',
-      'Options:',
-      '  -c,   --caminhos  [caminhos...]  Arquivo(s) em que a verificação será realizada',
-      '  -d,   --detalhes                 Retorna detalhes dos arquivos encontrados',
-      '  -e,   --exato                    Busca pela sentença exata informada',
-      '  -r,   --recursivo                Busca na pasta e sub-pastas do caminho informado',
-      '  -s,   --sensivel                 Diferencia maiúscula de minúscula',
-      '  -a,   --ajuda                    Exibi ajuda para usar o comando',
-      '',
-    ]);
-  });
-
   it('deve retornar nenhum arquivo encontrado', () => {
     carregar.parse(['node', 'test', '-c', './example/folder']);
 
