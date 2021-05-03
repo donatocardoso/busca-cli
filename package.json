@@ -1,6 +1,6 @@
 {
-  "name": "busca-cli",
-  "version": "0.10.5",
+  "name": "@dca/busca-cli",
+  "version": "0.10.6",
   "description": "script responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
   "main": "index.js",
   "bin": {
