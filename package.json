@@ -1,11 +1,10 @@
 {
-  "name": "search-cli",
-  "version": "0.9.5",
+  "name": "busca-cli",
+  "version": "0.10.5",
   "description": "script responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
   "main": "index.js",
   "bin": {
-    "busca-cli": "index.js",
-    "search-cli": "index.js"
+    "busca-cli": "index.js"
   },
   "keywords": [
     "search",
@@ -19,7 +18,7 @@
     "pretest": "rm -fr ./coverage-temp ./example/data && mkdir ./example/data && npm link",
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "test:coverage": "NODE_ENV=test jest --coverage --runInBand --detectOpenHandles",
-    "posttest:coverage": "jest-coverage-badges --input ./coverage-temp/coverage-summary.json --output ./__tests__/coverage"
+    "posttest:coverage": "jest-coverage-badges --input ./coverage-temp/coverage-summary.json --output ./__tests__/badges"
   },
   "dependencies": {
     "commander": "^7.2.0",
