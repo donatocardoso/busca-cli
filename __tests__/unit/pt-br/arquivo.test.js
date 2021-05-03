@@ -1,3 +1,4 @@
+const path = require('path');
 const programa = require('../../../src/pt-br/principal');
 const { output } = require('../../../src/utils/message');
 
@@ -7,11 +8,13 @@ describe('busca-cli arquivo [opcoes] <texto> -c [caminhos...]', () => {
   beforeEach(() => {
     output.length = 0;
 
-    if (arquivo.opts().caminhos) arquivo.opts().caminhos.length = 0;
+    if (arquivo.opts().caminhos) delete arquivo.opts().caminhos;
+    if (arquivo.opts().detalhes) delete arquivo.opts().detalhes;
+    if (arquivo.opts().exato) delete arquivo.opts().exato;
+    if (arquivo.opts().sensivel) delete arquivo.opts().sensivel;
   });
 
-  // Teste opção arquivo --ajuda
-  it('busca-cli arquivo --ajuda', () => {
+  it('deve retornar as intruções de uso do comando', () => {
     expect(arquivo.helpInformation().split('\n')).toEqual([
       'Usage: busca-cli arquivo [opcoes] <texto> -c [caminhos...]',
       '',
@@ -30,78 +33,82 @@ describe('busca-cli arquivo [opcoes] <texto> -c [caminhos...]', () => {
     ]);
   });
 
-  // Teste arquivo "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt
-  it('busca-cli arquivo "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt', () => {
+  it('deve retornar nenhum arquivo encontrado', () => {
     arquivo.parse([
       'node',
       'test',
-      'jack bravman',
+      'robert conrad karen',
       '-c',
-      './example/data/arquivo02.txt',
-      './example/data/arquivo03.txt',
+      './example/data/arquivo.txt',
+      './example/data/subfolder',
     ]);
 
-    expect(arquivo.args).toEqual(['jack bravman']);
+    expect(arquivo.args).toEqual(['robert conrad karen']);
 
-    expect(output).toContain('Foram encontradas 2 ocorrências pelo termo "jack bravman"');
-    expect(output).toContain('./example/data/arquivo02.txt');
-    expect(output).toContain('./example/data/arquivo03.txt');
+    expect(output).toContain('Foram encontradas 0 ocorrências pelo termo "robert conrad karen"');
+    expect(output).toContain('Nenhum arquivo encontrado!');
   });
 
-  // Teste arquivo --exato "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt
-  it('busca-cli arquivo -e "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt', () => {
+  it('deve retornar um arquivo encontrado: ./example/data/arquivo00.txt', () => {
+    arquivo.parse(['node', 'test', 'robert conrad karen', '-c', './example/data/arquivo00.txt']);
+
+    expect(arquivo.args).toEqual(['robert conrad karen']);
+
+    expect(output).toContain('Foram encontradas 1 ocorrências pelo termo "robert conrad karen"');
+    expect(output).toContain(path.resolve(process.cwd(), './example/data/arquivo00.txt'));
+  });
+
+  it('deve retornar um arquivo encontrados: -e ./example/data/arquivo00.txt', () => {
     arquivo.parse([
       'node',
       'test',
       '-e',
-      'jack bravman',
+      'robert conrad karen',
       '-c',
-      './example/data/arquivo02.txt',
-      './example/data/arquivo03.txt',
+      './example/data/arquivo00.txt',
+      './example/data/subfolder/arquivo05.txt',
     ]);
 
-    expect(arquivo.args).toEqual(['jack bravman']);
+    expect(arquivo.args).toEqual(['robert conrad karen']);
     expect(arquivo.opts()).toEqual({ caminhos: expect.any(Array), exato: true });
 
-    expect(output).toContain('Foram encontradas 1 ocorrências pelo termo "jack bravman"');
-    expect(output).toContain('./example/data/arquivo03.txt');
+    expect(output).toContain('Foram encontradas 1 ocorrências pelo termo "robert conrad karen"');
+    expect(output).toContain(path.resolve(process.cwd(), './example/data/arquivo00.txt'));
   });
 
-  // Teste arquivo --exato --sensivel "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt
-  it('busca-cli arquivo -es "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt', () => {
+  it('deve retornar um arquivo encontrados: -s ./example/data/arquivo00.txt', () => {
     arquivo.parse([
       'node',
       'test',
-      '-es',
-      'jack bravman',
+      '-s',
+      'robert conrad karen',
       '-c',
-      './example/data/arquivo02.txt',
-      './example/data/arquivo03.txt',
+      './example/data/arquivo00.txt',
+      './example/data/subfolder/arquivo05.txt',
     ]);
 
-    expect(arquivo.args).toEqual(['jack bravman']);
-    expect(arquivo.opts()).toEqual({ caminhos: expect.any(Array), exato: true, sensivel: true });
+    expect(arquivo.args).toEqual(['robert conrad karen']);
+    expect(arquivo.opts()).toEqual({ caminhos: expect.any(Array), sensivel: true });
 
-    expect(output).toContain('Foram encontradas 1 ocorrências pelo termo "jack bravman"');
-    expect(output).toContain('./example/data/arquivo03.txt');
+    expect(output).toContain('Foram encontradas 1 ocorrências pelo termo "robert conrad karen"');
+    expect(output).toContain(path.resolve(process.cwd(), './example/data/arquivo00.txt'));
   });
 
-  // Teste arquivo --detalhes --exato --sensivel "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt
-  it('busca-cli arquivo -des "jack bravman" -c ./example/data/arquivo02.txt ./example/data/arquivo03.txt', () => {
+  it('deve retornar um arquivo encontrados: -des ./example/data/arquivo00.txt', () => {
     arquivo.parse([
       'node',
       'test',
       '-des',
-      'jack bravman',
+      'robert conrad karen',
       '-c',
-      './example/data/arquivo02.txt',
-      './example/data/arquivo03.txt',
+      './example/data/arquivo00.txt',
+      './example/data/subfolder/arquivo05.txt',
     ]);
 
-    expect(arquivo.args).toEqual(['jack bravman']);
+    expect(arquivo.args).toEqual(['robert conrad karen']);
     expect(arquivo.opts()).toEqual({ caminhos: expect.any(Array), detalhes: true, exato: true, sensivel: true });
 
-    expect(output).toContain('Opções..........: caminhos,exato,sensivel,detalhes');
-    expect(output).toContain('Total de arquivos encontrados..: 1');
+    expect(output).toContain('Opções...........................: caminhos,detalhes,exato,sensivel');
+    expect(output).toContain('Foram encontrados................: 1 arquivos!');
   });
 });

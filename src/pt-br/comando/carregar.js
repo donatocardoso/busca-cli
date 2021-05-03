@@ -50,7 +50,7 @@ function carregar(options) {
 
   const carregados = [];
   const naoEncontrados = [];
-  const opcoesProps = Object.getOwnPropertyNames(options);
+  const opcoesProps = Object.getOwnPropertyNames(options).sort();
 
   options.caminhos.forEach(function _busca(caminho) {
     const caminhoCompleto = path.resolve(process.cwd(), caminho);
@@ -100,7 +100,7 @@ function carregar(options) {
 
   mostraMensagem(
     'Caminhos.........................:',
-    ...options.caminhos.map((caminho) => `     |__ ${path.resolve(process.cwd(), caminho)}`),
+    ...options.caminhos.map((caminho) => `     |__ ........................: ${caminho}`),
     '',
     `Opções...........................: ${opcoesProps}`,
     ...(naoEncontrados.length ? ['', 'Os caminhos a seguir não foram encontrados:', '', ...naoEncontrados, ''] : ['']),
@@ -122,37 +122,32 @@ function carregar(options) {
       const encontros = arquivo.conteudo.match(regex);
       const encontrosUnicos = Array.from(new Set(encontros));
 
+      delete arquivo.conteudo;
+
       return (
         encontrosUnicos &&
         ((options.exato && encontrosUnicos.length) || (palavras && encontrosUnicos.length === palavras.length))
       );
     });
 
-    const mensagem = encontrados.length
-      ? [
-          '',
-          `Foram encontradas ${encontrados.length} ocorrências pelo termo "${texto}"`,
-          `Os arquivos que possuem "${texto}" são:`,
-          '',
-          ...(options.detalhes
-            ? encontrados.map((arquivo) => {
-                delete arquivo.conteudo;
-                return arquivo;
-              })
-            : encontrados.map((arquivo) => arquivo.caminho)),
-          '',
-          `Tempo de processamento...........: ${new Date().getTime() - tempoFiltrar}ms`,
-          `Foram encontrados................: ${encontrados.length} arquivos!`,
-        ]
-      : [
-          '',
-          'Nenhum arquivo encontrado!',
-          '',
-          `Tempo de processamento...........: ${new Date().getTime() - tempoFiltrar}ms`,
-        ];
-
-    mostraMensagem(...mensagem);
+    mostraMensagem(
+      '',
+      `Foram encontradas ${encontrados.length} ocorrências pelo termo "${texto}"`,
+      ...(encontrados.length
+        ? [
+            `Os arquivos que possuem "${texto}" são:`,
+            '',
+            ...(options.detalhes ? encontrados : encontrados.map((arquivo) => arquivo.caminho)),
+            '',
+          ]
+        : ['', 'Nenhum arquivo encontrado!', '']),
+      `Tempo de processamento...........: ${new Date().getTime() - tempoFiltrar}ms`,
+      `Foram encontrados................: ${encontrados.length} arquivos!`
+    );
 
     input.close();
+
+    /* istanbul ignore next */
+    if (process.env.NODE_ENV !== 'test') process.exit();
   });
 }

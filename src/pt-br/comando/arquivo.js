@@ -3,10 +3,6 @@ let fs = require('fs');
 let path = require('path');
 let { mostraMensagem } = require('../../utils/message');
 
-let startTime = new Date().getTime(),
-  textos = [],
-  regex = null;
-
 /**
  * Cria o comando `arquivo`, que realiza uma busca em um ou mais arquivos
  * @param {Command} programa
@@ -29,118 +25,84 @@ module.exports = () => {
     .addHelpText('afterAll', '$ busca-cli arquivo "walt disney" -c ./arquivo01.txt ./arquivo02.txt')
     .addHelpText('afterAll', '$ busca-cli arquivo -des "walt disney" -c ./arquivo01.txt ./arquivo02.txt')
     .addHelpText('afterAll', '$ busca-cli arquivo -d -e -s "walt disney" -c ./arquivo01.txt ./arquivo02.txt')
-    .action((texto, options) => {
-      if (!texto) {
-        return mostraMensagem(
-          'É necessário informar o parâmetro <texto>',
-          '',
-          `Exemplo: busca-cli arquivo <texto> --caminhos [...]`
-        );
-      }
-
-      if (!options.caminhos.length) {
-        return mostraMensagem(
-          'É necessário informar a opção --caminhos',
-          '',
-          `Exemplo: busca-cli arquivo "${texto}" --caminhos [...]`
-        );
-      }
-
-      textos = texto.split(' ');
-
-      let sensivel = options.sensivel ? 'g' : 'ig';
-      let pattern = options.exato ? `(\\b${texto}\\b)` : `${textos.map((word) => `(\\b${word}\\b)`).join('|')}`;
-
-      regex = new RegExp(pattern, sensivel);
-
-      options.detalhes ? buscaDetalhada(texto, options) : buscaSimples(texto, options);
-    });
+    .action(arquivo);
 };
 
-function buscaSimples(texto, opcoes) {
-  let arquivos = busca(opcoes);
+/**
+ *
+ * @param {string} texto Senteça que será busca no conteudo dos arquivos para
+ * @param {object} options Opções para carregar os arquivos
+ * @param {string[]} options.caminhos Caminhos em que a busca será realizada
+ * @param {boolean} options.detalhes Deseja uma busca detalhada
+ * @param {boolean} options.exato Deseja uma busca pela sentença exata
+ * @param {boolean} options.sensivel Deseja uma busca que diferencie maiúscula de minúscula
+ */
+function arquivo(texto, options) {
+  const tempo = new Date().getTime();
 
-  let encontrados = arquivos.encontrados.length
-    ? [`Os arquivos que possuem "${texto}" são:`, '', ...arquivos.encontrados.map((arquivo) => arquivo.caminho), '']
-    : ['', 'Nenhum arquivo com o texto informado foi encontrado!', ''];
+  const encontrados = [];
+  const naoEncontrados = [];
+  const opcoesProps = Object.getOwnPropertyNames(options).sort();
 
-  let naoEncontrados = arquivos.naoEncontrados.length
-    ? ['', `Os arquivos a seguir não foram encontrados: `, '', ...arquivos.naoEncontrados, '']
-    : [];
+  const palavras = texto.split(' ');
 
-  return mostraMensagem(
-    `Foram encontradas ${arquivos.encontrados.length} ocorrências pelo termo "${texto}"`,
-    ...naoEncontrados,
-    ...encontrados,
-    `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
-  );
-}
+  const sensivel = options.sensivel ? 'g' : 'ig';
+  const pattern = options.exato ? `(\\b${texto}\\b)` : `${palavras.map((word) => `(\\b${word}\\b)`).join('|')}`;
 
-function buscaDetalhada(texto, opcoes) {
-  let arquivos = busca(opcoes);
+  const regex = new RegExp(pattern, sensivel);
 
-  let opcoesProps = Object.getOwnPropertyNames(opcoes);
-  let mostraOpcoes = opcoesProps.length ? [`Opções..........: ${opcoesProps}`, ''] : [];
+  options.caminhos.forEach((caminho) => {
+    const caminhoArquivo = path.resolve(process.cwd(), caminho);
 
-  let encontrados = arquivos.encontrados.length
-    ? [
-        'Arquivos encontrados:',
-        '',
-        arquivos.encontrados,
-        '',
-        `Total de arquivos encontrados..: ${arquivos.encontrados.length}`,
-      ]
-    : ['Nenhum arquivo encontrado!', ''];
+    if (!fs.existsSync(caminhoArquivo)) return naoEncontrados.push(caminhoArquivo);
 
-  let naoEncontrados = arquivos.naoEncontrados.length
-    ? [`Os arquivos a seguir não foram encontrados: `, '', ...arquivos.naoEncontrados, '']
-    : [];
+    if (fs.statSync(caminhoArquivo).isDirectory()) return naoEncontrados.push(caminhoArquivo);
 
-  return mostraMensagem(
-    'Parâmetro.......:',
-    `     |_ texto....: "${texto}"`,
-    '',
-    ...mostraOpcoes,
-    ...naoEncontrados,
-    ...encontrados,
-    `Tempo de processamento.........: ${new Date().getTime() - startTime}ms`
-  );
-}
-
-function busca(opcoes) {
-  let encontrados = [];
-  let naoEncontrados = [];
-
-  opcoes.caminhos.forEach((caminho) => {
-    let caminhoCompleto = path.resolve(process.cwd(), caminho);
-
-    if (!fs.existsSync(caminhoCompleto)) {
-      naoEncontrados.push(caminhoCompleto);
-      return;
-    }
-
-    let conteudo = fs.readFileSync(caminhoCompleto, {
+    const conteudo = fs.readFileSync(caminhoArquivo, {
       encoding: 'utf8',
     });
 
-    let propriedades = fs.statSync(caminhoCompleto);
+    const propriedades = fs.statSync(caminhoArquivo);
 
-    let encontros = conteudo.match(regex);
-    let encontrosUnicos = Array.from(new Set(encontros));
+    const encontros = conteudo.match(regex);
+    const encontrosUnicos = Array.from(new Set(encontros));
 
     if (
       encontrosUnicos &&
-      ((opcoes.exato && encontrosUnicos.length) || (textos && encontrosUnicos.length === textos.length))
+      ((options.exato && encontrosUnicos.length) || (palavras && encontrosUnicos.length === palavras.length))
     ) {
       encontrados.push({
         encontros: encontros.length,
         palavras: conteudo.split(' ').filter((word) => !!word).length,
         elementos: conteudo.length,
         tamanho: `${propriedades.size} bytes`,
-        caminho: caminho,
+        caminho: caminhoArquivo,
       });
     }
   });
 
-  return { encontrados, naoEncontrados };
+  mostraMensagem(
+    'Parâmetro........................:',
+    `     |_ texto....................: "${texto}"`,
+    '',
+    'Caminhos.........................:',
+    ...options.caminhos.map((caminho) => `     |__ ........................: ${caminho}`),
+    '',
+    `Opções...........................: ${opcoesProps}`,
+    ...(naoEncontrados.length ? ['', 'Os caminhos a seguir não foram encontrados:', '', ...naoEncontrados, ''] : ['']),
+    `Foram encontradas ${encontrados.length} ocorrências pelo termo "${texto}"`,
+    ...(encontrados.length
+      ? [
+          `Os arquivos que possuem "${texto}" são:`,
+          '',
+          ...(options.detalhes ? encontrados : encontrados.map((arquivo) => arquivo.caminho)),
+          '',
+        ]
+      : ['', 'Nenhum arquivo encontrado!', '']),
+    `Tempo de processamento...........: ${new Date().getTime() - tempo}ms`,
+    `Foram encontrados................: ${encontrados.length} arquivos!`
+  );
+
+  /* istanbul ignore next */
+  if (process.env.NODE_ENV !== 'test') process.exit();
 }

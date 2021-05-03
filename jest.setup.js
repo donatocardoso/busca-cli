@@ -5,8 +5,15 @@ jest.mock('readline');
 
 readline.createInterface.mockImplementation((args) => ({
   close: jest.fn().mockImplementation(() => undefined),
-  question: jest.fn().mockImplementation((question, cb) => cb('deborah austin')),
+  question: jest.fn().mockImplementation((question, cb) => cb('jack bravman')),
 }));
+
+if (!fs.existsSync('./example/data')) fs.mkdirSync('./example/data');
+
+fs.writeFileSync(
+  './example/data/arquivo00.txt',
+  'assassin 1986 robert conrad karen deborah austin jonathan banks sandor stern sandor stern neil t. maffeo'
+);
 
 fs.writeFileSync(
   './example/data/arquivo01.txt',
@@ -20,7 +27,7 @@ fs.writeFileSync(
 
 fs.writeFileSync(
   './example/data/arquivo03.txt',
-  'night of the dribbler 1990 fred travalena gregory calpakis flavia carrozzi jack bravman'
+  'night of the dribbler 1990 fred travalena gregory calpakis flavia carrozzi Jack Bravman'
 );
 
 fs.writeFileSync(
@@ -28,27 +35,29 @@ fs.writeFileSync(
   'nightmares 1983 emilio estevez lance henriksen richard masur joseph sargent'
 );
 
+if (!fs.existsSync('./example/data/subfolder')) fs.mkdirSync('./example/data/subfolder');
+
 fs.writeFileSync(
-  './example/data/arquivo05.txt',
-  'nightmare in badham county 1976 austin deborah raffin lynne moody chuck connors john llewellyn moxey'
+  './example/data/subfolder/arquivo05.txt',
+  'assassin 1986 Karen Robert Conrad deborah austin jonathan banks sandor stern sandor stern neil t. maffeo'
 );
 
 fs.writeFileSync(
-  './example/data/arquivo06.txt',
-  'nerdcore rising 2008 damian hess gaby alter brandon patton negin farsad negin farsad kim gatewood'
+  './example/data/subfolder/arquivo06.txt',
+  'night catches us 2010 Kerry Anthony Mackie washington wendell pierce tanya hamilton tanya hamilton'
 );
 
 fs.writeFileSync(
-  './example/data/arquivo07.txt',
-  'nightmare in chicago 1964 andrew duggan charles mcgraw michael murphy robert altman william p. mcgivern'
+  './example/data/subfolder/arquivo07.txt',
+  'night market hero 2011 zheng-long lan jia-yan ke tien-lun yeh tan-ching yeh Bravman Jack'
 );
 
 fs.writeFileSync(
-  './example/data/arquivo08.txt',
-  'nanking 2007 hugo armstrong rosalind chao Deborah Austin stephen dorff bill guttentag dan sturman dan sturman'
+  './example/data/subfolder/arquivo08.txt',
+  'night of the dribbler 1990 fred travalena gregory calpakis flavia carrozzi jack bravman'
 );
 
 fs.writeFileSync(
-  './example/data/arquivo09.txt',
-  'assassin 1986 robert conrad karen deborah austin jonathan banks sandor stern sandor stern neil t. maffeo'
+  './example/data/subfolder/arquivo09.txt',
+  'nightmares 1983 emilio estevez lance henriksen richard masur joseph sargent'
 );
