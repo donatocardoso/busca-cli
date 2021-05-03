@@ -1,6 +1,6 @@
 {
   "name": "@dca/busca-cli",
-  "version": "0.10.6",
+  "version": "1.10.6",
   "description": "script responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
   "main": "index.js",
   "bin": {
@@ -14,6 +14,13 @@
   ],
   "author": "Donato Cardoso Avila",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/donatocardoso/search-cli.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/donatocardoso/search-cli/issues"
+  },
   "scripts": {
     "pretest": "rm -fr ./coverage-temp ./example/data && mkdir ./example/data && npm link",
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
@@ -27,8 +34,6 @@
   "devDependencies": {
     "jest": "^26.6.3",
     "jest-coverage-badges": "^1.1.2",
-    "nodemon": "^2.0.7",
-    "prettier": "^2.2.1",
-    "shelljs": "^0.8.4"
+    "prettier": "^2.2.1"
   }
 }
