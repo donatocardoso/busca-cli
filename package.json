@@ -13,8 +13,11 @@
   },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
-  "version": "2.10.7",
+  "version": "2.10.8",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "https:////registry.npmjs.org"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/donatocardoso/busca-cli.git"
