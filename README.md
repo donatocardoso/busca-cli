@@ -23,13 +23,13 @@ Uma pequena experiência de aprendizagem js e node (e apenas se divertindo).
 ## 🔹 Instalação
 
 ```
-npm install -g @dca/busca-cli
+npm install -g @donatocardoso/busca-cli
 ```
 
 Ou
 
 ```
-yarn add -G @dca/busca-cli
+yarn add -G @donatocardoso/busca-cli
 ```
 
 Outra alternativa, você pode baixar este repositório e instalar a partir da fonte:
@@ -178,7 +178,7 @@ $ busca-cli carregar -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
 [badge-functions]: ./__tests__/badges/badge-functions.svg
 [badge-lines]: ./__tests__/badges/badge-lines.svg
 [badge-statements]: ./__tests__/badges/badge-statements.svg
-[npm-image]: https://img.shields.io/npm/v/@dca/busca-cli.svg
-[npm-url]: https://npmjs.org/package/@dca/busca-cli
-[downloads-image]: https://img.shields.io/npm/dm/@dca/busca-cli.svg
-[downloads-url]: https://npmjs.org/package/@dca/busca-cli
+[npm-image]: https://img.shields.io/npm/v/@donatocardoso/busca-cli.svg
+[npm-url]: https://npmjs.org/package/@donatocardoso/busca-cli
+[downloads-image]: https://img.shields.io/npm/dm/@donatocardoso/busca-cli.svg
+[downloads-url]: https://npmjs.org/package/@donatocardoso/busca-cli

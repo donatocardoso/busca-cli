@@ -1,25 +1,26 @@
 {
-  "name": "@dca/busca-cli",
-  "version": "1.10.6",
-  "description": "script responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
-  "main": "index.js",
-  "bin": {
-    "busca-cli": "index.js"
-  },
+  "name": "@donatocardoso/busca-cli",
+  "description": "Ferramenta responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
+  "homepage": "https://gitlab.com/donatocardoso/busca-cli/-/blob/master/README.md",
   "keywords": [
     "search",
     "busca",
     "pesquisa",
     "node"
   ],
+  "bin": {
+    "busca-cli": "index.js"
+  },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
+  "version": "1.10.7",
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/donatocardoso/search-cli.git"
+    "url": "git+https://gitlab.com/donatocardoso/busca-cli.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/donatocardoso/search-cli/issues"
+    "url": "https://gitlab.com/donatocardoso/busca-cli/issues"
   },
   "scripts": {
     "pretest": "rm -fr ./coverage-temp ./example/data && mkdir ./example/data && npm link",
