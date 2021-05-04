@@ -13,7 +13,7 @@
   },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
-  "version": "2.10.12",
+  "version": "2.10.13",
   "main": "index.js",
   "publishConfig": {
     "registry": "https:////registry.npmjs.org"

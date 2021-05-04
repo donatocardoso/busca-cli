@@ -4,12 +4,18 @@
 
 Uma pequena experiência de aprendizagem js e node (e apenas se divertindo).
 
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
-![badge-statements]
-![badge-branches]
-![badge-functions]
-![badge-lines]
+[![NPM](https://img.shields.io/npm/v/@donatocardoso/busca-cli)](https://www.npmjs.com/package/@donatocardoso/busca-cli)
+[![NPM](https://img.shields.io/npm/dt/@donatocardoso/busca-cli)](https://www.npmjs.com/package/@donatocardoso/busca-cli)
+[![GitHub license](https://img.shields.io/github/license/donatocardoso/busca-cli)](LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/donatocardoso/busca-cli)](https://github.com/donatocardoso/busca-cli/issues)
+[![GitHub forks](https://img.shields.io/github/forks/donatocardoso/busca-cli)](https://github.com/donatocardoso/busca-cli/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/donatocardoso/busca-cli)](https://github.com/donatocardoso/busca-cli/stargazers)
+[![GitHub visits](https://badges.pufler.dev/visits/donatocardoso/busca-cli)](https://badges.pufler.dev)
+
+![badge-statements](./__tests__/badges/badge-branches.svg)
+![badge-branches](./__tests__/badges/badge-functions.svg)
+![badge-functions](./__tests__/badges/badge-lines.svg)
+![badge-lines](./__tests__/badges/badge-statements.svg)
 
 ## 🔹 Pré Requisitos
 
@@ -43,7 +49,7 @@ $ npm link
 
 ## 🔹 Uso
 
-Para utilizar a ferramenta use da opção "-a" ou "--ajuda" para obter ajuda:
+Para utilizar a ferramenta use da opção **"-a"** ou **"--ajuda"** para obter ajuda:
 
 ```bash
 Usage: busca-cli [comando]
@@ -184,7 +190,7 @@ $ yarn test          // executa os testes
 $ yarn test:coverage // executa os testes e exibi a cobertura dos testes
 ```
 
-Caso ainda queira realizar testes com uma amostragem maior há um **./example/movies.zip** com vários arquivos preparados, faça a descompactação dos arquivos e informe-os conforme é solicitado nos comandos, exemplo:
+Caso ainda queira realizar testes com uma amostragem maior há um **"./example/movies.zip"** com vários arquivos preparados, faça a descompactação dos arquivos e informe-os conforme é solicitado nos comandos, exemplo:
 
 ```bash
 $ busca-cli pasta -ers ./example/movies
@@ -195,12 +201,3 @@ $ busca-cli pasta -ers ./example/movies
 ## Licença
 
 [MIT](LICENSE)
-
-[badge-branches]: ./__tests__/badges/badge-branches.svg
-[badge-functions]: ./__tests__/badges/badge-functions.svg
-[badge-lines]: ./__tests__/badges/badge-lines.svg
-[badge-statements]: ./__tests__/badges/badge-statements.svg
-[npm-image]: https://img.shields.io/npm/v/@donatocardoso/busca-cli.svg
-[npm-url]: https://npmjs.org/package/@donatocardoso/busca-cli
-[downloads-image]: https://img.shields.io/npm/dm/@donatocardoso/busca-cli.svg
-[downloads-url]: https://npmjs.org/package/@donatocardoso/busca-cli
