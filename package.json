@@ -1,7 +1,7 @@
 {
   "name": "@donatocardoso/busca-cli",
   "description": "Ferramenta responsavel por ler o conteudo de arquivos e filtra-los de acordo com um texto informado",
-  "homepage": "https://github.com/donatocardoso/busca-cli/-/blob/master/README.md",
+  "homepage": "https://github.com/donatocardoso/busca-cli#readme",
   "keywords": [
     "search",
     "busca",
@@ -13,7 +13,7 @@
   },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
-  "version": "2.10.8",
+  "version": "2.10.9",
   "main": "index.js",
   "publishConfig": {
     "registry": "https:////registry.npmjs.org"

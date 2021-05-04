@@ -2,21 +2,14 @@
 
 > Escrito em [node](http://nodejs.org), é uma ferramenta muito simples para realizar buscas em pastas e arquivos a partir do terminal, utilizando padrão **E/AND** para filtrar os arquivos, independende da ordem das palavras ou se estão em sequencia, podendo personalizar os o filtro conforme opções disponiveis em cada comando. [Veja como usar cada comando!](#comandos)
 
-<center>
-
 Uma pequena experiência de aprendizagem js e node (e apenas se divertindo).
 
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
 ![badge-statements]
 ![badge-branches]
 ![badge-functions]
 ![badge-lines]
-
-<br/>
-
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
-
-</center>
 
 ## 🔹 Pré Requisitos
 
@@ -27,23 +20,23 @@ Uma pequena experiência de aprendizagem js e node (e apenas se divertindo).
 
 ## 🔹 Instalação
 
-```
-npm install -g @donatocardoso/busca-cli
+```bash
+$ npm install -g @donatocardoso/busca-cli
 ```
 
 Ou
 
-```
-yarn add -G @donatocardoso/busca-cli
+```bash
+$ yarn add -G @donatocardoso/busca-cli
 ```
 
 Outra alternativa, você pode baixar este repositório e instalar a partir da fonte:
 
-```
-git clone https://github.com/latrokles/busca-cli.git
-cd busca-cli
-npm install
-npm link
+```bash
+$ git clone https://github.com/donatocardoso/busca-cli.git
+$ cd busca-cli
+$ npm install
+$ npm link
 ```
 
 ---
@@ -52,7 +45,7 @@ npm link
 
 Para utilizar a ferramenta use da opção "-a" ou "--ajuda" para obter ajuda:
 
-```
+```bash
 Usage: busca-cli [comando]
 
 Options:
@@ -71,13 +64,13 @@ Commands:
 
 Para os próximos exemplos vamos considerar os seguintes arquivos:
 
-```
+```text
 nome: ./pasta01/arquivo01.txt
 
 conteúdo: night catches us 2010 anthony mackie kerry washington wendell pierce tanya hamilton tanya hamilton
 ```
 
-```
+```text
 nome: ./pasta02/arquivo02.txt
 
 conteúdo: Night catches us 2010 anthony mackie kerry washington Wendell pierce tanya hamilton tanya Hamilton
@@ -92,13 +85,13 @@ Exemplos de uso dos comandos:
 - O parametro **_texto_** é obrigatório e deve ser informado com o uso de aspas simples ou duplas.
 - A opção **_caminhos_** é obrigatório e deve ser informada com um ou mais valores.
 
-```
-busca-cli arquivo [opcoes] <texto> -c [caminhos...]
+```bash
+$ busca-cli arquivo [opcoes] <texto> -c [caminhos...]
 ```
 
 - As opções do comando são:
 
-```
+```bash
 -c, --caminhos  [caminhos...]   Arquivo(s) em que a verificação será realizada
 -d, --detalhes                  Retorna detalhes do(s) arquivo(s)
 -e, --exato                     Busca pela sentença exata informada
@@ -108,7 +101,7 @@ busca-cli arquivo [opcoes] <texto> -c [caminhos...]
 
 - Exemplos de chamada:
 
-```
+```bash
 $ busca-cli arquivo "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
 $ busca-cli arquivo -des "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
 $ busca-cli arquivo -d -e -s "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
@@ -121,13 +114,13 @@ $ busca-cli arquivo -d -e -s "night wendell hamilton" -c ./pasta01/arquivo01.txt
 - O parametro **_texto_** é obrigatório e deve ser informado com o uso de aspas simples ou duplas.
 - A opção **_caminhos_** é obrigatório e deve ser informada com um ou mais valores.
 
-```
-busca-cli pasta [opcoes] <texto> -c [caminhos...]
+```bash
+$ busca-cli pasta [opcoes] <texto> -c [caminhos...]
 ```
 
 - As opções do comando são:
 
-```
+```bash
 -c,   --caminhos  [caminhos...]  Diretório(s) em que a verificação será realizada
 -d,   --detalhes                 Retorna detalhes dos arquivos encontrados
 -e,   --exato                    Busca pela sentença exata informada
@@ -138,7 +131,7 @@ busca-cli pasta [opcoes] <texto> -c [caminhos...]
 
 - Exemplos de chamada:
 
-```
+```bash
 $ busca-cli pasta "night wendell hamilton" -c ./pasta01 ./pasta02
 $ busca-cli pasta -ders "night wendell hamilton" -c ./pasta01 ./pasta02
 $ busca-cli pasta -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
@@ -150,13 +143,13 @@ $ busca-cli pasta -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
 
 - A opção **_caminhos_** é obrigatório e deve ser informada com um ou mais valores.
 
-```
-busca-cli carregar [opcoes] -c [caminhos...]
+```bash
+$ busca-cli carregar [opcoes] -c [caminhos...]
 ```
 
 - As opções do comando são:
 
-```
+```bash
 -c,   --caminhos  [caminhos...]  Arquivo(s) em que a verificação será realizada
 -d,   --detalhes                 Retorna detalhes dos arquivos encontrados
 -e,   --exato                    Busca pela sentença exata informada
@@ -167,10 +160,34 @@ busca-cli carregar [opcoes] -c [caminhos...]
 
 - Exemplos de chamada:
 
-```
+```bash
 $ busca-cli carregar "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
 $ busca-cli carregar -ders "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
 $ busca-cli carregar -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
+```
+
+---
+
+## Testes
+
+Os Testes Unitários são bem simples de serão executados o arquivo **"jest.setup.js"** já realiza as configurações básicas para essa situação, sendo necessário executar somente um dos seguintes comandos, escolha um conforme sua necessidade:
+
+```bash
+$ npm test          // executa os testes
+$ npm test:coverage // executa os testes e exibi a cobertura dos testes
+```
+
+Ou
+
+```bash
+$ yarn test          // executa os testes
+$ yarn test:coverage // executa os testes e exibi a cobertura dos testes
+```
+
+Caso ainda queira realizar testes com uma amostragem maior há um **./example/movies.zip** com vários arquivos preparados, faça a descompactação dos arquivos e informe-os conforme é solicitado nos comandos, exemplo:
+
+```bash
+$ busca-cli pasta -ers ./example/movies
 ```
 
 ---
