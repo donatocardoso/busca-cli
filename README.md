@@ -27,7 +27,7 @@ $ npm install -g @donatocardoso/busca-cli
 Ou
 
 ```bash
-$ yarn add -G @donatocardoso/busca-cli
+$ yarn global add @donatocardoso/busca-cli
 ```
 
 Outra alternativa, você pode baixar este repositório e instalar a partir da fonte:
@@ -170,7 +170,7 @@ $ busca-cli carregar -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
 
 ## Testes
 
-Os Testes Unitários são bem simples de serão executados o arquivo **"jest.setup.js"** já realiza as configurações básicas para essa situação, sendo necessário executar somente um dos seguintes comandos, escolha um conforme sua necessidade:
+Os Testes Unitários são bem simples de ser executados, o arquivo **"jest.setup.js"** já realiza as configurações básicas para essa situação, sendo necessário executar somente um dos seguintes comandos, escolha um conforme sua necessidade:
 
 ```bash
 $ npm test          // executa os testes
