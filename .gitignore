@@ -2,6 +2,7 @@
 
 coverage-temp/
 example/data/
+example/movies/
 node_modules/
 
 # Files
