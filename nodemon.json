@@ -1,6 +1,0 @@
-{
-  "script": "index.js",
-  "ext": "js,json",
-  "watch": ["src/"],
-  "ignore": ["__tests__/", ".vscode", "node_modules/"]
-}

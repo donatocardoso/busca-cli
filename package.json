@@ -13,7 +13,7 @@
   },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
-  "version": "3.10.13",
+  "version": "3.11.13",
   "main": "index.js",
   "publishConfig": {
     "registry": "https:////registry.npmjs.org"
@@ -29,9 +29,12 @@
     "pretest": "rm -fr ./coverage-temp ./example/data && mkdir ./example/data && npm link",
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "test:coverage": "NODE_ENV=test jest --coverage --runInBand --detectOpenHandles",
-    "posttest:coverage": "jest-coverage-badges --input ./coverage-temp/coverage-summary.json --output ./__tests__/badges"
+    "posttest:coverage": "jest-coverage-badges --input ./coverage-temp/coverage-summary.json --output ./__tests__/badges",
+    "add:clear": "rm -fr ./node_modules package-lock.json yarn.lock"
   },
   "dependencies": {
+    "@sentry/node": "^6.3.5",
+    "chalk": "^4.1.1",
     "commander": "^7.2.0",
     "readline": "^1.3.0"
   },
