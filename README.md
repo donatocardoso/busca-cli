@@ -52,11 +52,17 @@ $ npm link
 Para utilizar a ferramenta use da opção **"-a"** ou **"--ajuda"** para obter ajuda:
 
 ```bash
+$ npx @donatocardoso/busca-cli --ajuda
+```
+
+Saída:
+
+```bash
 Usage: busca-cli [comando]
 
 Options:
-  -v,   --versao             Exibi a versão atual
-  -a,   --ajuda              Exibi ajuda para usar o comando
+  -v,   --versao                 Exibi a versão atual
+  -a,   --ajuda                  Exibi ajuda para usar o comando
 
 Commands:
   arquivo   [options] <texto>    Verifica se o(s) arquivo(s) possue(em) o texto informado
@@ -92,7 +98,7 @@ Exemplos de uso dos comandos:
 - A opção **_caminhos_** é obrigatório e deve ser informada com um ou mais valores.
 
 ```bash
-$ busca-cli arquivo [opcoes] <texto> -c [caminhos...]
+$ npx @donatocardoso/busca-cli arquivo [opcoes] <texto> -c [caminhos...]
 ```
 
 - As opções do comando são:
@@ -108,9 +114,9 @@ $ busca-cli arquivo [opcoes] <texto> -c [caminhos...]
 - Exemplos de chamada:
 
 ```bash
-$ busca-cli arquivo "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
-$ busca-cli arquivo -des "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
-$ busca-cli arquivo -d -e -s "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
+$ npx @donatocardoso/busca-cli arquivo "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
+$ npx @donatocardoso/busca-cli arquivo -des "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
+$ npx @donatocardoso/busca-cli arquivo -d -e -s "night wendell hamilton" -c ./pasta01/arquivo01.txt ./pasta02/arquivo02.txt
 ```
 
 2. **_busca-cli pasta_**
@@ -121,7 +127,7 @@ $ busca-cli arquivo -d -e -s "night wendell hamilton" -c ./pasta01/arquivo01.txt
 - A opção **_caminhos_** é obrigatório e deve ser informada com um ou mais valores.
 
 ```bash
-$ busca-cli pasta [opcoes] <texto> -c [caminhos...]
+$ npx @donatocardoso/busca-cli pasta [opcoes] <texto> -c [caminhos...]
 ```
 
 - As opções do comando são:
@@ -138,9 +144,9 @@ $ busca-cli pasta [opcoes] <texto> -c [caminhos...]
 - Exemplos de chamada:
 
 ```bash
-$ busca-cli pasta "night wendell hamilton" -c ./pasta01 ./pasta02
-$ busca-cli pasta -ders "night wendell hamilton" -c ./pasta01 ./pasta02
-$ busca-cli pasta -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
+$ npx @donatocardoso/busca-cli pasta "night wendell hamilton" -c ./pasta01 ./pasta02
+$ npx @donatocardoso/busca-cli pasta -ders "night wendell hamilton" -c ./pasta01 ./pasta02
+$ npx @donatocardoso/busca-cli pasta -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
 ```
 
 3. **_busca-cli carregar_**
@@ -150,7 +156,7 @@ $ busca-cli pasta -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02
 - A opção **_caminhos_** é obrigatório e deve ser informada com um ou mais valores.
 
 ```bash
-$ busca-cli carregar [opcoes] -c [caminhos...]
+$ npx @donatocardoso/busca-cli carregar [opcoes] -c [caminhos...]
 ```
 
 - As opções do comando são:
@@ -167,9 +173,9 @@ $ busca-cli carregar [opcoes] -c [caminhos...]
 - Exemplos de chamada:
 
 ```bash
-$ busca-cli carregar "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
-$ busca-cli carregar -ders "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
-$ busca-cli carregar -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
+$ npx @donatocardoso/busca-cli carregar "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
+$ npx @donatocardoso/busca-cli carregar -ders "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
+$ npx @donatocardoso/busca-cli carregar -d -e -r -s "night wendell hamilton" -c ./pasta01 ./pasta02/arquivo02.txt
 ```
 
 ---
@@ -193,7 +199,7 @@ $ yarn test:coverage // executa os testes e exibi a cobertura dos testes
 Caso ainda queira realizar testes com uma amostragem maior há um **"./example/movies.zip"** com vários arquivos preparados, faça a descompactação dos arquivos e informe-os conforme é solicitado nos comandos, exemplo:
 
 ```bash
-$ busca-cli pasta -ers ./example/movies
+$ npx @donatocardoso/busca-cli pasta -ers ./example/movies
 ```
 
 ---
