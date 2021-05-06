@@ -1,12 +1,4 @@
 const fs = require('fs');
-const readline = require('readline');
-
-jest.mock('readline');
-
-readline.createInterface.mockImplementation((args) => ({
-  close: jest.fn().mockImplementation(() => undefined),
-  question: jest.fn().mockImplementation((question, cb) => cb('jack bravman')),
-}));
 
 if (!fs.existsSync('./example/data')) fs.mkdirSync('./example/data');
 

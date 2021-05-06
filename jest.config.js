@@ -6,18 +6,22 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.js'],
   coverageThreshold: {
     global: {
-      statements: 85,
-      branches: 85,
-      functions: 0,
-      lines: 85,
+      statements: 90,
+      branches: 90,
+      functions: 90,
+      lines: 90,
     },
   },
   coverageDirectory: './coverage-temp',
   coverageProvider: 'babel',
+  coveragePathIgnorePatterns: ['<rootDir>/src/utils'],
   coverageReporters: ['json-summary', 'text', 'lcov'],
+  moduleNameMapper: {
+    'env.json': '<rootDir>/src/config/env.json',
+  },
   setupFiles: ['./jest.setup.js'],
-  testMatch: ['**/__tests__/**/*.test.js'],
+  testMatch: ['**/__tests__/unit/pt-BR/*.test.js', '**/__tests__/unit/en-US/*.test.js'],
   testPathIgnorePatterns: ['\\\\node_modules\\\\'],
   testTimeout: 30000,
-  verbose: false,
+  verbose: true,
 };

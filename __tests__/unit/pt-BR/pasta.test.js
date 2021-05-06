@@ -1,6 +1,8 @@
+require('./_mock');
+
 const path = require('path');
-const programa = require('../../../src/pt-br/principal');
-const { output } = require('../../../src/utils/message');
+const programa = require('#src/main');
+const { output } = require('#src/utils/message');
 
 const pasta = programa.commands.find((programa) => programa.name() === 'pasta');
 

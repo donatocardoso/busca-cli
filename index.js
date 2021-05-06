@@ -1,16 +1,24 @@
 #!/usr/bin/env node
-require('./src/utils/monitory');
+
+require('module-alias/register');
 
 const chalk = require('chalk');
-const programa = require('./src/pt-br/principal');
+const initProgram = require('#src/utils/init');
 
-const colunas = process.stdout.columns;
+initProgram().then(() => {
+  require('#src/utils/monitory');
 
-console.log(chalk.bold(''.padStart(colunas, '*')));
-console.log(chalk.bold('BUSCA  CLI'.padStart(colunas / 2).padEnd(colunas)));
-console.log(chalk.bold(''.padStart(colunas, '*')));
-console.log();
+  const programa = require('#src/main');
 
-programa.parse(process.argv, programa.opts());
+  const colunas = process.stdout.columns;
 
-process.on('exit', () => console.log());
+  console.log(chalk.bold(''.padStart(colunas, '*')));
+  console.log(chalk.bold('BUSCA  CLI'.padStart(colunas / 2).padEnd(colunas)));
+  console.log(chalk.bold(''.padStart(colunas, '*')));
+  console.log();
+
+  console.log(process.argv);
+  programa.parse(process.argv, programa.opts());
+});
+
+process.on('exit', (code) => console.log(''));
