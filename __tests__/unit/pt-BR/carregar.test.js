@@ -6,7 +6,7 @@ const { output } = require('#src/utils/message');
 
 const carregar = programa.commands.find((programa) => programa.name() === 'carregar');
 
-describe('busca-cli carregar [opcoes] <texto> -c [caminhos...]', () => {
+describe('busca-cli carregar [opcoes] -c [caminhos...]', () => {
   beforeEach(() => {
     output.length = 0;
 

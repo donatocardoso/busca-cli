@@ -14,7 +14,7 @@
   },
   "author": "Donato Cardoso Avila",
   "license": "MIT",
-  "version": "4.12.14",
+  "version": "4.13.14",
   "main": "index.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

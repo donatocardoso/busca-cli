@@ -17,6 +17,8 @@ Uma pequena experiência de aprendizagem js e node (e apenas se divertindo).
 ![badge-functions](./__tests__/badges/badge-lines.svg)
 ![badge-lines](./__tests__/badges/badge-statements.svg)
 
+---
+
 ## 🔹 Pré Requisitos
 
 1. node

@@ -1,118 +1,101 @@
+const { showMessage } = require('#src/utils/message');
 const { Command, Option } = require('commander');
 const fs = require('fs');
 const path = require('path');
-const { mostraMensagem } = require('../../utils/message');
+const languages = require('./languages');
+const parseOptions = require('./parseOptions');
+
+const lang = languages();
 
 /**
  * Cria o comando `pasta`, que realiza uma busca em uma pasta
- * @param {Command} programa
+ * @param {Command} program
  * @returns Command
  */
 module.exports = () => {
-  return new Command('pasta')
-    .usage('[opcoes] <texto> -c [caminhos...]')
-    .arguments('<texto>')
-    .description('Busca arquivos no diretório desejado que possuem o texto informado', {
-      texto: 'Texto de busca nos arquivos',
-    })
-    .requiredOption('-c,   --caminhos  [caminhos...]', 'Diretório(s) em que a verificação será realizada')
-    .addOption(new Option('-d,   --detalhes', 'Retorna detalhes dos arquivos encontrados'))
-    .addOption(new Option('-e,   --exato', 'Busca pela sentença exata informada'))
-    .addOption(new Option('-r,   --recursivo', 'Busca na pasta e sub-pastas do caminho informado'))
-    .addOption(new Option('-s,   --sensivel', 'Diferencia maiúscula de minúscula'))
-    .helpOption('-a,   --ajuda', 'Exibi ajuda para usar o comando')
-    .addHelpText('afterAll', '\nExemplos de chamada:\n')
-    .addHelpText('afterAll', '')
-    .addHelpText('afterAll', '$ busca-cli pasta "walt disney" -c ./exemplo/pasta01 ./exemplo/pasta02')
-    .addHelpText('afterAll', '$ busca-cli pasta -ders "walt disney" -c ./exemplo/pasta01 ./exemplo/pasta02')
-    .addHelpText('afterAll', '$ busca-cli pasta -d -e -r -s "walt disney" -c ./exemplo/pasta01 ./exemplo/pasta02')
-    .action(pasta);
+  return new Command(lang.name)
+    .usage(lang.usage)
+    .arguments(lang.arguments)
+    .description(lang.description.text, lang.description.arguments)
+    .requiredOption(lang.pathsOption.flags, lang.pathsOption.description)
+    .addOption(new Option(lang.detailsOption.flags, lang.detailsOption.description))
+    .addOption(new Option(lang.exactOption.flags, lang.exactOption.description))
+    .addOption(new Option(lang.recursiveOption.flags, lang.recursiveOption.description))
+    .addOption(new Option(lang.caseSensitiveOption.flags, lang.caseSensitiveOption.description))
+    .helpOption(lang.helpOption.flags, lang.helpOption.description)
+    .addHelpText('afterAll', ' ')
+    .addHelpText('afterAll', lang.addHelpText.title)
+    .addHelpText('afterAll', ' ')
+    .addHelpText('afterAll', lang.addHelpText.example01)
+    .addHelpText('afterAll', lang.addHelpText.example02)
+    .addHelpText('afterAll', lang.addHelpText.example03)
+    .action(folder);
 };
 
 /**
  *
- * @param {string} texto Senteça que será busca no conteudo dos arquivos para
- * @param {object} options Opções para carregar os arquivos
- * @param {string[]} options.caminhos Caminhos em que a busca será realizada
- * @param {boolean} options.detalhes Deseja uma busca detalhada
- * @param {boolean} options.exato Deseja uma busca pela sentença exata
- * @param {boolean} options.sensivel Deseja uma busca que diferencie maiúscula de minúscula
+ * @param {string} text Feel like it will be searched in the contents of the files to
+ * @param {object} options Options for uploading files
+ * @param {string[]} options.paths Paths in which the search will be carried out
+ * @param {boolean} options.details You want a detailed search
+ * @param {boolean} options.exact Want a search for the exact sentence
+ * @param {boolean} options.recursive Want a search in the folder and sub-folders
+ * @param {boolean} options.sensivel Want a search that is case sensitive
  */
-function pasta(texto, options) {
-  const tempo = new Date().getTime();
+function folder(text, options) {
+  const time = new Date().getTime();
 
-  const encontrados = [];
-  const naoEncontrados = [];
-  const opcoesProps = Object.getOwnPropertyNames(options).sort();
+  const found = [];
+  const notFound = [];
+  const optionsProps = Object.getOwnPropertyNames(options).sort();
 
-  const palavras = texto.split(' ');
+  options = parseOptions(options);
 
-  const sensivel = options.sensivel ? 'g' : 'ig';
-  const pattern = options.exato ? `(\\b${texto}\\b)` : `${palavras.map((word) => `(\\b${word}\\b)`).join('|')}`;
+  const words = text.split(' ');
 
-  const regex = new RegExp(pattern, sensivel);
+  const caseSensitive = options.caseSensitive ? 'g' : 'ig';
+  const pattern = options.exact ? `(\\b${text}\\b)` : `${words.map((word) => `(\\b${word}\\b)`).join('|')}`;
 
-  options.caminhos.forEach(function _busca(caminho) {
-    const caminhoPasta = path.resolve(process.cwd(), caminho);
+  const regex = new RegExp(pattern, caseSensitive);
 
-    if (!fs.existsSync(caminhoPasta)) return naoEncontrados.push(caminhoPasta);
+  options.paths.forEach(function _search(caminho) {
+    const folderPath = path.resolve(process.cwd(), caminho);
 
-    if (!fs.statSync(caminhoPasta).isDirectory()) return naoEncontrados.push(caminhoPasta);
+    if (!fs.existsSync(folderPath)) return notFound.push(folderPath);
 
-    fs.readdirSync(caminhoPasta).forEach((arquivo) => {
-      const caminhoArquivo = `${caminhoPasta}/${arquivo}`;
+    if (!fs.statSync(folderPath).isDirectory()) return notFound.push(folderPath);
 
-      if (fs.statSync(caminhoArquivo).isDirectory()) {
-        if (options.recursivo) return _busca(caminhoArquivo, options);
+    fs.readdirSync(folderPath).forEach((arquivo) => {
+      const filePath = `${folderPath}/${arquivo}`;
+
+      if (fs.statSync(filePath).isDirectory()) {
+        if (options.recursive) return _search(filePath, options);
 
         return;
       }
 
-      const conteudo = fs.readFileSync(caminhoArquivo, {
+      const conteudo = fs.readFileSync(filePath, {
         encoding: 'utf8',
       });
 
-      const propriedades = fs.statSync(caminhoArquivo);
+      const fileProps = fs.statSync(filePath);
 
-      const encontros = conteudo.match(regex);
-      const encontrosUnicos = Array.from(new Set(encontros));
+      const matchs = conteudo.match(regex);
+      const match = Array.from(new Set(matchs));
 
-      if (
-        encontrosUnicos &&
-        ((options.exato && encontrosUnicos.length) || (palavras && encontrosUnicos.length === palavras.length))
-      ) {
-        encontrados.push({
-          encontros: encontros.length,
-          palavras: conteudo.split(' ').filter((word) => !!word).length,
-          elementos: conteudo.length,
-          tamanho: `${propriedades.size} bytes`,
-          caminho: caminhoArquivo,
+      if (match && ((options.exact && match.length) || (words && match.length === words.length))) {
+        found.push({
+          matchs: matchs.length,
+          words: conteudo.split(' ').filter((word) => !!word).length,
+          elements: conteudo.length,
+          size: `${fileProps.size} bytes`,
+          path: filePath,
         });
       }
     });
   });
 
-  mostraMensagem(
-    'Parâmetro........................:',
-    `     |_ texto....................: "${texto}"`,
-    '',
-    'Caminhos.........................:',
-    ...options.caminhos.map((caminho) => `     |__ ........................: ${caminho}`),
-    '',
-    `Opções...........................: ${opcoesProps}`,
-    ...(naoEncontrados.length ? ['', 'Os caminhos a seguir não foram encontrados:', '', ...naoEncontrados, ''] : ['']),
-    `Foram encontradas ${encontrados.length} ocorrências pelo termo "${texto}"`,
-    ...(encontrados.length
-      ? [
-          `Os arquivos que possuem "${texto}" são:`,
-          '',
-          ...(options.detalhes ? encontrados : encontrados.map((arquivo) => arquivo.caminho)),
-          '',
-        ]
-      : ['', 'Nenhum arquivo encontrado!', '']),
-    `Tempo de processamento...........: ${new Date().getTime() - tempo}ms`,
-    `Foram encontrados................: ${encontrados.length} arquivos!`
-  );
+  showMessage(...lang.messages(time, text, optionsProps, options, found, notFound));
 
   /* istanbul ignore next */
   if (process.env.NODE_ENV !== 'test') process.exit();

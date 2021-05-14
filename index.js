@@ -9,16 +9,18 @@ initProgram().then(() => {
   require('#src/utils/monitory');
 
   const programa = require('#src/main');
+  const { mainLanguages } = require('#src/utils/languages');
 
+  const lang = mainLanguages();
   const colunas = process.stdout.columns;
 
   console.log(chalk.bold(''.padStart(colunas, '*')));
-  console.log(chalk.bold('BUSCA  CLI'.padStart(colunas / 2).padEnd(colunas)));
+  console.log(chalk.bold(lang.header.padStart(colunas / 2).padEnd(colunas)));
   console.log(chalk.bold(''.padStart(colunas, '*')));
   console.log();
 
-  console.log(process.argv);
+  // console.log(process.argv);
   programa.parse(process.argv, programa.opts());
 });
 
-process.on('exit', (code) => console.log(''));
+process.on('exit', (code) => console.log(' '));

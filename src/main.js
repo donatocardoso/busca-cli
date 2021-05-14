@@ -1,14 +1,17 @@
 const { Command } = require('commander');
 const packagejson = require('#root/package.json');
+const { mainLanguages } = require('#src/utils/languages');
 const commands = require('./commands');
 
+const lang = mainLanguages();
 const programa = new Command();
 
-programa.name('busca-cli').usage('[comando]').addHelpCommand(false);
-
 programa
-  .helpOption('-a,   --ajuda', 'Exibi ajuda para usar o comando')
-  .version(packagejson.version, '-v,   --versao', 'Exibi a versão atual');
+  .name(lang.name)
+  .usage(lang.usage)
+  .addHelpCommand(false)
+  .helpOption(lang.helpOption.flags, lang.helpOption.description)
+  .version(packagejson.version, lang.versionOption.flags, lang.versionOption.description);
 
 for (const command of commands) programa.addCommand(command());
 

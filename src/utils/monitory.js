@@ -1,19 +1,12 @@
 const Sentry = require('@sentry/node');
-const { mostraMensagem } = require('./message');
+const { showMessage } = require('./message');
 const env = require('#src/config/env.json');
+const { monitoryLanguages } = require('#src/utils/languages');
+
+const lang = monitoryLanguages();
 
 process.on('uncaughtException', (err) => {
-  mostraMensagem(
-    'Ops!! Ocorreu uma falha não esperada!',
-    '',
-    ...(env.REPORT_ERROR
-      ? [
-          'Um aviso foi enviado para nossos desenvolvedores, fique tranquilo(a) eles vão corrigir o mais rápido possível.',
-          '',
-        ]
-      : []),
-    `O que aconteceu foi: ${err.message}`
-  );
+  showMessage(...lang.uncaughtException(err));
 
   if (env.REPORT_ERROR) {
     Sentry.init({
